@@ -1,11 +1,19 @@
-def call (String credId, String imageName) {
-     withCredentials([usernamePassword(
-                    credentialsId:"${credId}",    // .... here i used demohub  .....
-                    passwordVariable:"dockerHubPass",
-                    usernameVariable:"dockerHubUser"
-                    )]){
-                sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
-                sh "docker image tag ${imageName} ${env.dockerHubUser}/${imageName} "  // here the the image name is two-tier-flask-app
-                sh "docker push ${env.dockerHubUser}/${imageName}"
-            }
+def call(Map config = [:]) {
+    def imageName = config.imageName ?: error("Image name is required")
+    def imageTag = config.imageTag ?: 'latest'
+    def credentials = config.credentials ?: 'docker-hub-credentials'
+    
+    echo "Pushing Docker image: ${imageName}:${imageTag}"
+    
+    withCredentials([usernamePassword(
+        credentialsId: credentials,
+        usernameVariable: 'DOCKER_USERNAME',
+        passwordVariable: 'DOCKER_PASSWORD'
+    )]) {
+        sh """
+            echo "\$DOCKER_PASSWORD" | docker login -u "\$DOCKER_USERNAME" --password-stdin
+            docker push ${imageName}:${imageTag}
+            docker push ${imageName}:latest
+        """
+    }
 }
