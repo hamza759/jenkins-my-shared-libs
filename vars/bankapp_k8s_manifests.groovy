@@ -26,7 +26,8 @@ def call(Map config = [:]) {
         // Update deployment manifests with new image tags - using proper Linux sed syntax
         sh """
             
-            sed -i "s|image: hamza426/bankapp-:.*|image: hamza426/bankapp:${imageTag}|g" ${manifestsPath}/bankapp-deployment.yaml
+            
+            sed -i "s|image: hamza426/bankapp:.*|image: hamza426/bankapp:${imageTag}|g" ${manifestsPath}/bankapp-deployment.yaml
 
             
             # Check for changes
