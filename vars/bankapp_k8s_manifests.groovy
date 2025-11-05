@@ -27,7 +27,7 @@ def call(Map config = [:]) {
         sh """
             # Update main application deployment - note the correct image name is trainwithshubham/easyshop-app
             
-             sed -i "s|image: hamza426/bankapp-:.*|image: hamza426/bankapp:${imageTag}|g" ${manifestsPath}/bankapp-deployment.yaml
+            sed -i "s|image: hamza426/bankapp-:.*|image: hamza426/bankapp:${imageTag}|g" ${manifestsPath}/bankapp-deployment.yaml
 
             
             # Check for changes
@@ -43,7 +43,7 @@ def call(Map config = [:]) {
                 git remote set-url origin https://\${GIT_USERNAME}:\${GIT_PASSWORD}@github.com/hamza759/BankApp.git
 
                 git push origin HEAD:main
-                git push origin HEAD:${gitBranch}
+    
 
             fi
         """
