@@ -26,22 +26,21 @@ def call(Map config = [:]) {
         // Update deployment manifests with new image tags - using proper Linux sed syntax
         sh """
             # Update main application deployment - note the correct image name is trainwithshubham/easyshop-app
-            # sed -i "s|image: hamza426/easyshop-:.*|image: hamza426/easyshop-app:${imageTag}|g" ${manifestsPath}/08-easyshop-deployment.yaml
+            sed -i "s|image: hamza426/easyshop-:.*|image: hamza426/easyshop-app:${imageTag}|g" ${manifestsPath}/08-easyshop-deployment.yaml
             
-             sed -i "s|image: hamza426/bankapp-:.*|image: hamza426/bankapp:${imageTag}|g" ${manifestsPath}/bankapp-deployment.yaml
 
             
             # Update migration job if it exists 
-         #   if [ -f "${manifestsPath}/12-migration-job.yaml" ]; then
-          #      sed -i "s|image: hamza426/easyshop-migration:.*|image: hamza426/easyshop-migration:${imageTag}|g" ${manifestsPath}/12-migration-job.yaml
-          #  fi
+            if [ -f "${manifestsPath}/12-migration-job.yaml" ]; then
+                sed -i "s|image: hamza426/easyshop-migration:.*|image: hamza426/easyshop-migration:${imageTag}|g" ${manifestsPath}/12-migration-job.yaml
+            fi
 
 
             
             # Ensure ingress is using the correct domain
-          #  if [ -f "${manifestsPath}/10-ingress.yaml" ]; then
-          #      sed -i "s|host: .*|host: easyshop.letsdeployit.com|g" ${manifestsPath}/10-ingress.yaml
-         #   fi
+            if [ -f "${manifestsPath}/10-ingress.yaml" ]; then
+                sed -i "s|host: .*|host: easyshop.letsdeployit.com|g" ${manifestsPath}/10-ingress.yaml
+            fi
 
             
             # Check for changes
@@ -54,8 +53,7 @@ def call(Map config = [:]) {
                 
                 # Set up credentials for push
                 
-               # git remote set-url origin https://\${GIT_USERNAME}:\${GIT_PASSWORD}@github.com/hamza759/Ecommerce-App.git
-                git remote set-url origin https://\${GIT_USERNAME}:\${GIT_PASSWORD}@github.com/hamza759/BankApp.git
+                git remote set-url origin https://\${GIT_USERNAME}:\${GIT_PASSWORD}@github.com/hamza759/Ecommerce-App.git
 
                 git push origin HEAD:\${GIT_BRANCH}
             fi
