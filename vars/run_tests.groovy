@@ -1,9 +1,10 @@
 def call() {
     echo "Running unit tests..."
     
-    // Add your unit test commands here
-    // For example:
-    // sh "npm test" or "mvn test" depending on your project
-    
-    echo "Unit tests completed successfully"
+    try {
+        sh "mvn clean test"
+        echo "Unit tests completed successfully"
+    } catch (Exception e) {
+        error "Unit tests failed! Build stopped."
+    }
 }
